@@ -1,0 +1,75 @@
+No.     Time           Source                Destination           Protocol Length Info
+      1 0.000000       Schweitz_05:90:0a     Iec-Tc57_01:00:14     GOOSE    192    
+
+Frame 1: 192 bytes on wire (1536 bits), 192 bytes captured (1536 bits) on interface 0
+    Interface id: 0 (\Device\NPF_{2A52B12B-6BF8-4C71-A24E-E330E365E075})
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Mar 27, 2015 10:58:03.877357000 Central Daylight Time
+    [Time shift for this packet: 0.000000000 seconds]
+    Epoch Time: 1427471883.877357000 seconds
+    [Time delta from previous captured frame: 0.000000000 seconds]
+    [Time delta from previous displayed frame: 0.000000000 seconds]
+    [Time since reference or first frame: 0.000000000 seconds]
+    Frame Number: 1
+    Frame Length: 192 bytes (1536 bits)
+    Capture Length: 192 bytes (1536 bits)
+    [Frame is marked: False]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:goose]
+    [Coloring Rule Name: Broadcast]
+    [Coloring Rule String: eth[0] & 1]
+Ethernet II, Src: Schweitz_05:90:0a (00:30:a7:05:90:0a), Dst: Iec-Tc57_01:00:14 (01:0c:cd:01:00:14)
+    Destination: Iec-Tc57_01:00:14 (01:0c:cd:01:00:14)
+        Address: Iec-Tc57_01:00:14 (01:0c:cd:01:00:14)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...1 .... .... .... .... = IG bit: Group address (multicast/broadcast)
+    Source: Schweitz_05:90:0a (00:30:a7:05:90:0a)
+        Address: Schweitz_05:90:0a (00:30:a7:05:90:0a)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IEC 61850/GOOSE (0x88b8)
+GOOSE
+    APPID: 0x00b1 (177)
+    Length: 178
+    Reserved 1: 0x0000 (0)
+    Reserved 2: 0x0000 (0)
+    goosePdu
+        gocbRef: PDC02_11_700G_G1CFG/LLN0$GO$GooseDset_BF
+        timeAllowedtoLive: 2000
+        datSet: PDC02_11_700G_G1CFG/LLN0$Dset_BF
+        goID: 11_700G_G1_Dset_BF
+        t: Mar 27, 2015 08:58:03.410999298 UTC
+        stNum: 5
+        sqNum: 1757
+        test: False
+        confRev: 3
+        ndsCom: False
+        numDatSetEntries: 6
+        allData: 6 items
+            Data: boolean (3)
+                boolean: False
+            Data: bit-string (4)
+                Padding: 3
+                bit-string: 0000
+            Data: utc-time (17)
+                utc-time: Mar 27, 2015 08:28:48.784999847 UTC
+            Data: boolean (3)
+                boolean: False
+            Data: bit-string (4)
+                Padding: 3
+                bit-string: 0000
+            Data: utc-time (17)
+                utc-time: Mar 27, 2015 08:28:26.228996276 UTC
+
+0000  01 0c cd 01 00 14 00 30 a7 05 90 0a 88 b8 00 b1   .......0........
+0010  00 b2 00 00 00 00 61 81 a7 80 28 50 44 43 30 32   ......a...(PDC02
+0020  5f 31 31 5f 37 30 30 47 5f 47 31 43 46 47 2f 4c   _11_700G_G1CFG/L
+0030  4c 4e 30 24 47 4f 24 47 6f 6f 73 65 44 73 65 74   LN0$GO$GooseDset
+0040  5f 42 46 81 02 07 d0 82 20 50 44 43 30 32 5f 31   _BF..... PDC02_1
+0050  31 5f 37 30 30 47 5f 47 31 43 46 47 2f 4c 4c 4e   1_700G_G1CFG/LLN
+0060  30 24 44 73 65 74 5f 42 46 83 12 31 31 5f 37 30   0$Dset_BF..11_70
+0070  30 47 5f 47 31 5f 44 73 65 74 5f 42 46 84 08 55   0G_G1_Dset_BF..U
+0080  15 1b 9b 69 37 40 92 85 01 05 86 02 06 dd 87 01   ...i7@..........
+0090  00 88 01 03 89 01 00 8a 01 06 ab 24 83 01 00 84   ...........$....
+00a0  03 03 00 00 91 08 55 15 14 c0 c8 f5 c0 92 83 01   ......U.........
+00b0  00 84 03 03 00 00 91 08 55 15 14 aa 3a 9f 80 92   ........U...:...
