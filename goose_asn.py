@@ -1,11 +1,34 @@
 # coding: utf-8
 
 from pyasn1.codec.ber import encoder
-from pyasn1.type import char, namedtype, tag, univ, useful
+from pyasn1.type import char, constraint, namedtype, tag, univ, useful
 
 
 class FloatingPoint(univ.OctetString):
     pass
+
+
+class Unsigned(univ.Integer):
+    subtypeSpec = constraint.ValueRangeConstraint(0, float('inf'))
+
+
+class BCD(univ.Integer):
+    subtypeSpec = constraint.ValueRangeConstraint(0, float('inf'))
+
+
+class TimeOfDay(univ.OctetString):
+    subtypeSpec = constraint.ConstraintsUnion(
+        constraint.ValueSizeConstraint(4, 4),
+        constraint.ValueSizeConstraint(6, 6)
+    )
+
+
+class MMSString(char.UTF8String):
+    pass
+
+
+class UtcTime(univ.OctetString):
+    subtypeSpec = constraint.ValueSizeConstraint(8, 8)
 
 
 class Data(univ.Choice):
@@ -31,8 +54,7 @@ class Data(univ.Choice):
                 5
             )
         )),
-        # TODO: Unsigned Should Never be Negative
-        namedtype.NamedType('unsigned', univ.Integer().subtype(
+        namedtype.NamedType('unsigned', Unsigned().subtype(
             implicitTag=tag.Tag(
                 tag.tagClassContext,
                 tag.tagFormatSimple,
@@ -67,16 +89,14 @@ class Data(univ.Choice):
                 11
             )
         )),
-        # TODO: Binary Time should be of TimeOfDay type with size of 4 or 6
-        namedtype.NamedType('binary-time', univ.OctetString().subtype(
+        namedtype.NamedType('binary-time', TimeOfDay().subtype(
             implicitTag=tag.Tag(
                 tag.tagClassContext,
                 tag.tagFormatSimple,
                 12
             )
         )),
-        # TODO: BCD Should Never be Negative
-        namedtype.NamedType('bcd', univ.Integer().subtype(
+        namedtype.NamedType('bcd', BCD().subtype(
             implicitTag=tag.Tag(
                 tag.tagClassContext,
                 tag.tagFormatSimple,
@@ -97,16 +117,14 @@ class Data(univ.Choice):
                 15
             )
         )),
-        # TODO: MMS String should be its own type
-        namedtype.NamedType('mMSString', char.UTF8String().subtype(
+        namedtype.NamedType('mMSString', MMSString().subtype(
             implicitTag=tag.Tag(
                 tag.tagClassContext,
                 tag.tagFormatSimple,
                 16
             )
         )),
-        # TODO: UTC Time should be its own type
-        namedtype.NamedType('utc-time', univ.OctetString().subtype(
+        namedtype.NamedType('utc-time', UtcTime().subtype(
             implicitTag=tag.Tag(
                 tag.tagClassContext,
                 tag.tagFormatSimple,
@@ -164,7 +182,7 @@ class IECGoosePDU(univ.Sequence):
         ),
         namedtype.NamedType(
             't',
-            univ.OctetString().subtype(
+            UtcTime().subtype(
                 implicitTag=tag.Tag(
                     tag.tagClassContext,
                     tag.tagFormatSimple,
@@ -192,7 +210,7 @@ class IECGoosePDU(univ.Sequence):
                 )
             )
         ),
-        namedtype.DefaultedNamedType(
+        namedtype.NamedType(
             'test',
             univ.Boolean(False).subtype(
                 implicitTag=tag.Tag(
@@ -212,7 +230,7 @@ class IECGoosePDU(univ.Sequence):
                 )
             )
         ),
-        namedtype.DefaultedNamedType(
+        namedtype.NamedType(
             'ndsCom',
             univ.Boolean(False).subtype(
                 implicitTag=tag.Tag(
@@ -256,16 +274,23 @@ class IECGoosePDU(univ.Sequence):
 
 
 if __name__ == '__main__':
-    g = IECGoosePDU()
+    g = IECGoosePDU().subtype(
+        implicitTag=tag.Tag(
+            tag.tagClassApplication,
+            tag.tagFormatConstructed,
+            1
+        )
+    )
     g.setComponentByName('gocbRef', 'PDC02_11_700G_G1CFG/LLN0$GO$GooseDset_BF')
     g.setComponentByName('timeAllowedtoLive', 2000)
-    g.setComponentByName('datSet', 'PDC02_11_700G_G1CFG/LN0$Dset_BF')
+    g.setComponentByName('datSet', 'PDC02_11_700G_G1CFG/LLN0$Dset_BF')
     g.setComponentByName('goID', '11_700G_G1_Dset_BF')
-    g.setComponentByName('t', 'some time')
+    g.setComponentByName('t', b'\x55\x15\x1b\x9b\x69\x37\x40\x92')
     g.setComponentByName('stNum', 5)
     g.setComponentByName('sqNum', 1757)
     g.setComponentByName('test', False)
     g.setComponentByName('confRev', 3)
+    g.setComponentByName('ndsCom', False)
     g.setComponentByName('numDatSetEntries', 6)
     d = AllData().subtype(
         implicitTag=tag.Tag(
@@ -277,15 +302,15 @@ if __name__ == '__main__':
     d1 = Data()
     d1.setComponentByName('boolean', False)
     d2 = Data()
-    d2.setComponentByName('bit-string', "'0000'B")
+    d2.setComponentByName('bit-string', "'0000000000000'B")
     d3 = Data()
-    d3.setComponentByName('utc-time', '0000')
+    d3.setComponentByName('utc-time', b'\x55\x15\x14\xc0\xc8\xf5\xc0\x92')
     d4 = Data()
     d4.setComponentByName('boolean', False)
     d5 = Data()
-    d5.setComponentByName('bit-string', "'0000'B")
+    d5.setComponentByName('bit-string', "'0000000000000'B")
     d6 = Data()
-    d6.setComponentByName('utc-time', '0000')
+    d6.setComponentByName('utc-time', b'\x55\x15\x14\xaa\x3a\x9f\x80\x92')
     d.setComponentByPosition(0, d1)
     d.setComponentByPosition(1, d2)
     d.setComponentByPosition(2, d3)
