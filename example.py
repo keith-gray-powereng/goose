@@ -1,32 +1,63 @@
+from pyasn1.codec.ber import encoder
+from pyasn1.type import tag
 from scapy.layers.l2 import Ether
 from scapy.layers.l2 import Dot1Q
-from scapy.packet import Raw
 from scapy.utils import hexdump
 
 from goose import GOOSE
+from goose_pdu import AllData
+from goose_pdu import Data
+from goose_pdu import IECGoosePDU
 
 if __name__ == '__main__':
-    payload = (
-        "\x61\x81\xf3\x80\x2b\x44\x45\x4e"
-        "\x4e\x59\x5f\x31\x31\x46\x5f\x31\x33\x5f\x31\x30\x30\x43\x46\x47"
-        "\x2f\x4c\x4c\x4e\x30\x24\x47\x4f\x24\x44\x73\x65\x74\x5f\x53\x75"
-        "\x62\x6e\x65\x74\x43\x74\x72\x6c\x81\x02\x07\xd0\x82\x22\x44\x45"
-        "\x4e\x4e\x59\x5f\x31\x31\x46\x5f\x31\x33\x5f\x31\x30\x30\x43\x46"
-        "\x47\x2f\x4c\x4c\x4e\x30\x24\x47\x5f\x4e\x65\x74\x43\x74\x72\x6c"
-        "\x83\x19\x31\x31\x46\x5f\x31\x33\x5f\x31\x30\x30\x44\x73\x65\x74"
-        "\x5f\x53\x75\x62\x6e\x65\x74\x43\x74\x72\x6c\x84\x08\x5a\xaa\xe0"
-        "\xa4\x6f\xf3\x5e\x92\x85\x01\x60\x86\x02\x3f\x40\x87\x01\x00\x88"
-        "\x01\x02\x89\x01\x00\x8a\x01\x05\xab\x64\xa2\x12\x83\x01\x00\x84"
-        "\x03\x03\x00\x00\x91\x08\x5a\xaa\xe0\xa4\x6f\xf3\x5e\x92\xa2\x12"
-        "\x83\x01\x00\x84\x03\x03\x00\x00\x91\x08\x5a\xa9\x39\x5a\x03\xea"
-        "\x4a\x92\xa2\x12\x83\x01\x00\x84\x03\x03\x00\x00\x91\x08\x5a\xa9"
-        "\x39\x5a\x03\xea\x4a\x92\xa2\x12\x83\x01\x00\x84\x03\x03\x00\x00"
-        "\x91\x08\x5a\xa9\x39\x5a\x03\xea\x4a\x92\xa2\x12\x83\x01\x00\x84"
-        "\x03\x03\x00\x00\x91\x08\x5a\xaa\xd1\x7d\xd2\x48\x21\x92"
+    g = IECGoosePDU().subtype(
+        implicitTag=tag.Tag(
+            tag.tagClassApplication,
+            tag.tagFormatConstructed,
+            1
+        )
     )
+    g.setComponentByName('gocbRef', 'PDC02_11_700G_G1CFG/LLN0$GO$GooseDset_BF')
+    g.setComponentByName('timeAllowedtoLive', 2000)
+    g.setComponentByName('datSet', 'PDC02_11_700G_G1CFG/LLN0$Dset_BF')
+    g.setComponentByName('goID', '11_700G_G1_Dset_BF')
+    g.setComponentByName('t', b'\x55\x15\x1b\x9b\x69\x37\x40\x92')
+    g.setComponentByName('stNum', 5)
+    g.setComponentByName('sqNum', 1757)
+    g.setComponentByName('test', False)
+    g.setComponentByName('confRev', 3)
+    g.setComponentByName('ndsCom', False)
+    g.setComponentByName('numDatSetEntries', 6)
+    d = AllData().subtype(
+        implicitTag=tag.Tag(
+            tag.tagClassContext,
+            tag.tagFormatConstructed,
+            11
+        )
+    )
+    d1 = Data()
+    d1.setComponentByName('boolean', False)
+    d2 = Data()
+    d2.setComponentByName('bit-string', "'0000000000000'B")
+    d3 = Data()
+    d3.setComponentByName('utc-time', b'\x55\x15\x14\xc0\xc8\xf5\xc0\x92')
+    d4 = Data()
+    d4.setComponentByName('boolean', False)
+    d5 = Data()
+    d5.setComponentByName('bit-string', "'0000000000000'B")
+    d6 = Data()
+    d6.setComponentByName('utc-time', b'\x55\x15\x14\xaa\x3a\x9f\x80\x92')
+    d.setComponentByPosition(0, d1)
+    d.setComponentByPosition(1, d2)
+    d.setComponentByPosition(2, d3)
+    d.setComponentByPosition(3, d4)
+    d.setComponentByPosition(4, d5)
+    d.setComponentByPosition(5, d6)
+    g.setComponentByName('allData', d)
+
     hexdump(
         Ether(dst='01:0c:cd:01:00:14') / 
         Dot1Q(vlan=10, type=0x88b8, prio=6) / 
         GOOSE(appid=int(0x00b1)) /
-        payload
+        encoder.encode(g)
     )
