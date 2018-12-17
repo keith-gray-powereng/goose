@@ -32,106 +32,140 @@ class UtcTime(univ.OctetString):
 
 
 class Data(univ.Choice):
-    componentType = namedtype.NamedTypes(
-        namedtype.NamedType('boolean', univ.Boolean().subtype(
-            implicitTag=tag.Tag(
-                tag.tagClassContext,
-                tag.tagFormatSimple,
-                3
-            )
-        )),
-        namedtype.NamedType('bit-string', univ.BitString().subtype(
-            implicitTag=tag.Tag(
-                tag.tagClassContext,
-                tag.tagFormatSimple,
-                4
-            )
-        )),
-        namedtype.NamedType('integer', univ.Integer().subtype(
-            implicitTag=tag.Tag(
-                tag.tagClassContext,
-                tag.tagFormatSimple,
-                5
-            )
-        )),
-        namedtype.NamedType('unsigned', Unsigned().subtype(
-            implicitTag=tag.Tag(
-                tag.tagClassContext,
-                tag.tagFormatSimple,
-                6
-            )
-        )),
-        namedtype.NamedType('floating-point', FloatingPoint().subtype(
-            implicitTag=tag.Tag(
-                tag.tagClassContext,
-                tag.tagFormatSimple,
-                7
-            )
-        )),
-        namedtype.NamedType('octet-string', univ.OctetString().subtype(
-            implicitTag=tag.Tag(
-                tag.tagClassContext,
-                tag.tagFormatSimple,
-                9
-            )
-        )),
-        namedtype.NamedType('visible-string', char.VisibleString().subtype(
-            implicitTag=tag.Tag(
-                tag.tagClassContext,
-                tag.tagFormatSimple,
-                10
-            )
-        )),
-        namedtype.NamedType('generalized-time', useful.GeneralizedTime().subtype(
-            implicitTag=tag.Tag(
-                tag.tagClassContext,
-                tag.tagFormatSimple,
-                11
-            )
-        )),
-        namedtype.NamedType('binary-time', TimeOfDay().subtype(
-            implicitTag=tag.Tag(
-                tag.tagClassContext,
-                tag.tagFormatSimple,
-                12
-            )
-        )),
-        namedtype.NamedType('bcd', BCD().subtype(
-            implicitTag=tag.Tag(
-                tag.tagClassContext,
-                tag.tagFormatSimple,
-                13
-            )
-        )),
-        namedtype.NamedType('booleanArray', univ.BitString().subtype(
-            implicitTag=tag.Tag(
-                tag.tagClassContext,
-                tag.tagFormatSimple,
-                14
-            )
-        )),
-        namedtype.NamedType('objId', univ.ObjectIdentifier().subtype(
-            implicitTag=tag.Tag(
-                tag.tagClassContext,
-                tag.tagFormatSimple,
-                15
-            )
-        )),
-        namedtype.NamedType('mMSString', MMSString().subtype(
-            implicitTag=tag.Tag(
-                tag.tagClassContext,
-                tag.tagFormatSimple,
-                16
-            )
-        )),
-        namedtype.NamedType('utc-time', UtcTime().subtype(
-            implicitTag=tag.Tag(
-                tag.tagClassContext,
-                tag.tagFormatSimple,
-                17
-            )
-        ))
-    )
+    pass
+
+
+Data.componentType = namedtype.NamedTypes(
+    namedtype.NamedType('array', univ.SequenceOf(componentType=Data()).subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 1))),
+    namedtype.NamedType('structure', univ.SequenceOf(componentType=Data()).subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 2))),
+    namedtype.NamedType('boolean', univ.Boolean().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 3))),
+    namedtype.NamedType('bit-string', univ.BitString().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 4))),
+    namedtype.NamedType('integer', univ.Integer().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 5))),
+    namedtype.NamedType('unsigned', univ.Integer().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 6))),
+    namedtype.NamedType('floating-point', FloatingPoint().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 7))),
+    namedtype.NamedType('real', univ.Real().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 8))),
+    namedtype.NamedType('octet-string', univ.OctetString().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 9))),
+    namedtype.NamedType('visible-string', char.VisibleString().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 10))),
+    namedtype.NamedType('binary-time', TimeOfDay().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 12))),
+    namedtype.NamedType('bcd', univ.Integer().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 13))),
+    namedtype.NamedType('booleanArray', univ.BitString().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 14))),
+    namedtype.NamedType('objId', univ.ObjectIdentifier().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 15))),
+    namedtype.NamedType('mMSString', MMSString().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 16))),
+    namedtype.NamedType('utc-time', UtcTime().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 17)))
+)
+#     componentType = namedtype.NamedTypes(
+#         namedtype.NamedType('array', univ.Any()),  # just a placeholder
+#         namedtype.NamedType('structure', univ.Any()),  # just a placeholder
+#         namedtype.NamedType('boolean', univ.Boolean().subtype(
+#             implicitTag=tag.Tag(
+#                 tag.tagClassContext,
+#                 tag.tagFormatSimple,
+#                 3
+#             )
+#         )),
+#         namedtype.NamedType('bit-string', univ.BitString().subtype(
+#             implicitTag=tag.Tag(
+#                 tag.tagClassContext,
+#                 tag.tagFormatSimple,
+#                 4
+#             )
+#         )),
+#         namedtype.NamedType('integer', univ.Integer().subtype(
+#             implicitTag=tag.Tag(
+#                 tag.tagClassContext,
+#                 tag.tagFormatSimple,
+#                 5
+#             )
+#         )),
+#         namedtype.NamedType('unsigned', Unsigned().subtype(
+#             implicitTag=tag.Tag(
+#                 tag.tagClassContext,
+#                 tag.tagFormatSimple,
+#                 6
+#             )
+#         )),
+#         namedtype.NamedType('floating-point', FloatingPoint().subtype(
+#             implicitTag=tag.Tag(
+#                 tag.tagClassContext,
+#                 tag.tagFormatSimple,
+#                 7
+#             )
+#         )),
+#         namedtype.NamedType('octet-string', univ.OctetString().subtype(
+#             implicitTag=tag.Tag(
+#                 tag.tagClassContext,
+#                 tag.tagFormatSimple,
+#                 9
+#             )
+#         )),
+#         namedtype.NamedType('visible-string', char.VisibleString().subtype(
+#             implicitTag=tag.Tag(
+#                 tag.tagClassContext,
+#                 tag.tagFormatSimple,
+#                 10
+#             )
+#         )),
+#         namedtype.NamedType(
+#             'generalized-time',
+#             useful.GeneralizedTime().subtype(
+#                 implicitTag=tag.Tag(
+#                     tag.tagClassContext,
+#                     tag.tagFormatSimple,
+#                     11
+#                 )
+#             )
+#         ),
+#         namedtype.NamedType('binary-time', TimeOfDay().subtype(
+#             implicitTag=tag.Tag(
+#                 tag.tagClassContext,
+#                 tag.tagFormatSimple,
+#                 12
+#             )
+#         )),
+#         namedtype.NamedType('bcd', BCD().subtype(
+#             implicitTag=tag.Tag(
+#                 tag.tagClassContext,
+#                 tag.tagFormatSimple,
+#                 13
+#             )
+#         )),
+#         namedtype.NamedType('booleanArray', univ.BitString().subtype(
+#             implicitTag=tag.Tag(
+#                 tag.tagClassContext,
+#                 tag.tagFormatSimple,
+#                 14
+#             )
+#         )),
+#         namedtype.NamedType('objId', univ.ObjectIdentifier().subtype(
+#             implicitTag=tag.Tag(
+#                 tag.tagClassContext,
+#                 tag.tagFormatSimple,
+#                 15
+#             )
+#         )),
+#         namedtype.NamedType('mMSString', MMSString().subtype(
+#             implicitTag=tag.Tag(
+#                 tag.tagClassContext,
+#                 tag.tagFormatSimple,
+#                 16
+#             )
+#         )),
+#         namedtype.NamedType('utc-time', UtcTime().subtype(
+#             implicitTag=tag.Tag(
+#                 tag.tagClassContext,
+#                 tag.tagFormatSimple,
+#                 17
+#             )
+#         ))
+#     )
+# 
+# 
+# Data.componentType[0]._NamedType__type = univ.SequenceOf(
+#     componentType=Data()
+# ).subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatConstructed, 1))
+# Data.componentType[1]._NamedType__type = univ.SequenceOf(
+#     componentType=Data()
+# ).subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatConstructed, 2))
 
 
 class AllData(univ.SequenceOf):

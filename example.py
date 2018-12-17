@@ -56,8 +56,8 @@ if __name__ == '__main__':
     g.setComponentByName('allData', d)
 
     hexdump(
-        Ether(dst='01:0c:cd:01:00:14') / 
-        Dot1Q(vlan=10, type=0x88b8, prio=6) / 
+        Ether(dst='01:0c:cd:01:00:14') /
+        Dot1Q(vlan=10, type=0x88b8, prio=6) /
         GOOSE(appid=int(0x00b1)) /
         encoder.encode(g)
     )
