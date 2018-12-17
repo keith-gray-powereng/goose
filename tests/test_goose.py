@@ -381,10 +381,16 @@ def test_goose_pdu_all_data_structure_1():
     all_data = iec61850_goose_pdu.getComponentByName('allData')
     data_item_1 = all_data.getComponentByPosition(0)
     structure = data_item_1.getComponentByName('structure')
-    import pdb; pdb.set_trace()
+    g = IECGoosePDU().subtype(
+        implicitTag=tag.Tag(
+            tag.tagClassApplication,
+            tag.tagFormatConstructed,
+            1
+        )
+    )
     decoded_data, unprocessed_trail = decoder.decode(
         encoded_data,
-        asn1Spec=Data().clone()
+        asn1Spec=g
     )
     assert expected == decoded_data
 
