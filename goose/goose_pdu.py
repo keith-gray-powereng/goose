@@ -37,7 +37,7 @@ class Data(univ.Choice):
 
 Data.componentType = namedtype.NamedTypes(
     namedtype.NamedType('array', univ.SequenceOf(componentType=Data()).subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 1))),
-    namedtype.NamedType('structure', univ.SequenceOf(componentType=Data()).subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 2))),
+    namedtype.NamedType('structure', univ.SequenceOf(componentType=Data()).subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatConstructed, 2))),
     namedtype.NamedType('boolean', univ.Boolean().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 3))),
     namedtype.NamedType('bit-string', univ.BitString().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 4))),
     namedtype.NamedType('integer', univ.Integer().subtype(implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 5))),

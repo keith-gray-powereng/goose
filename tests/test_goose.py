@@ -1,4 +1,6 @@
+from pyasn1.codec.ber import decoder
 from pyasn1.codec.ber import encoder
+from pyasn1.type import char
 from pyasn1.type import tag
 from pyasn1.type import univ
 from scapy.layers.l2 import Ether
@@ -142,3 +144,303 @@ def test_goose_message():
     assert calculated[252:254] == expected[252:254]  # structure #5 asn.1
     assert calculated[254:272] == expected[254:272]  # structure #5 asn.1
     assert calculated == expected
+
+
+def test_goose_pdu_gocbRef():
+    encoded_data = (
+        "\x80\x2b"
+        "\x44\x45\x4e\x4e\x59\x5f\x31\x31\x46\x5f\x31\x33\x5f\x31\x30\x30"
+        "\x43\x46\x47\x2f\x4c\x4c\x4e\x30\x24\x47\x4f\x24\x44\x73\x65\x74"
+        "\x5f\x53\x75\x62\x6e\x65\x74\x43\x74\x72\x6c"
+    )
+    expected = "DENNY_11F_13_100CFG/LLN0$GO$Dset_SubnetCtrl"
+    iec61850_goose_pdu = IECGoosePDU().clone()
+    gocbRef = iec61850_goose_pdu.getComponentByName('gocbRef')
+    decoded_data, unprocessed_trail = decoder.decode(
+        encoded_data,
+        asn1Spec=gocbRef
+    )
+    assert expected == decoded_data
+
+
+def test_goose_pdu_time_allowed_to_live():
+    encoded_data = "\x81\x02\x07\xd0"
+    expected = 2000
+    iec61850_goose_pdu = IECGoosePDU().clone()
+    timeAllowedtoLive = iec61850_goose_pdu.getComponentByName('timeAllowedtoLive')
+    decoded_data, unprocessed_trail = decoder.decode(
+        encoded_data,
+        asn1Spec=timeAllowedtoLive
+    )
+    assert expected == decoded_data
+
+
+def test_goose_pdu_dat_set():
+    encoded_data = (
+        "\x82\x22"
+        "\x44\x45\x4e\x4e\x59\x5f\x31\x31\x46\x5f\x31\x33\x5f\x31\x30\x30"
+        "\x43\x46\x47\x2f\x4c\x4c\x4e\x30\x24\x47\x5f\x4e\x65\x74\x43\x74"
+        "\x72\x6c"
+    )
+    expected = "DENNY_11F_13_100CFG/LLN0$G_NetCtrl"
+    iec61850_goose_pdu = IECGoosePDU().clone()
+    dat_set = iec61850_goose_pdu.getComponentByName('datSet')
+    decoded_data, unprocessed_trail = decoder.decode(
+        encoded_data,
+        asn1Spec=dat_set
+    )
+    assert expected == decoded_data
+
+
+def test_goose_pdu_go_id():
+    encoded_data = (
+        "\x83\x19"
+        "\x31\x31\x46\x5f\x31\x33\x5f\x31\x30\x30\x44\x73\x65\x74\x5f\x53"
+        "\x75\x62\x6e\x65\x74\x43\x74\x72\x6c"
+    )
+    expected = "11F_13_100Dset_SubnetCtrl"
+    iec61850_goose_pdu = IECGoosePDU().clone()
+    go_id = iec61850_goose_pdu.getComponentByName('goID')
+    decoded_data, unprocessed_trail = decoder.decode(
+        encoded_data,
+        asn1Spec=go_id
+    )
+    assert expected == decoded_data
+
+
+def test_goose_pdu_t():
+    encoded_data = (
+        "\x84\x08"
+        "\x5a\xaa\xe0\xa4\x6f\xf3\x5e\x92"
+    )
+    expected = "\x5a\xaa\xe0\xa4\x6f\xf3\x5e\x92"
+    iec61850_goose_pdu = IECGoosePDU().clone()
+    time = iec61850_goose_pdu.getComponentByName('t')
+    decoded_data, unprocessed_trail = decoder.decode(
+        encoded_data,
+        asn1Spec=time
+    )
+    assert expected == decoded_data
+
+
+def test_goose_pdu_stNum():
+    encoded_data = (
+        "\x85\x01"
+        "\x60"
+    )
+    expected = 96
+    iec61850_goose_pdu = IECGoosePDU().clone()
+    stNum = iec61850_goose_pdu.getComponentByName('stNum')
+    decoded_data, unprocessed_trail = decoder.decode(
+        encoded_data,
+        asn1Spec=stNum
+    )
+    assert expected == decoded_data
+
+
+def test_goose_pdu_sqNum():
+    encoded_data = (
+        "\x86\x02"
+        "\x3f\x40"
+    )
+    expected = 16192
+    iec61850_goose_pdu = IECGoosePDU().clone()
+    sqNum = iec61850_goose_pdu.getComponentByName('sqNum')
+    decoded_data, unprocessed_trail = decoder.decode(
+        encoded_data,
+        asn1Spec=sqNum
+    )
+    assert expected == decoded_data
+
+
+def test_goose_pdu_test():
+    encoded_data = (
+        "\x87\x01"
+        "\x00"
+    )
+    expected = False
+    iec61850_goose_pdu = IECGoosePDU().clone()
+    test = iec61850_goose_pdu.getComponentByName('test')
+    decoded_data, unprocessed_trail = decoder.decode(
+        encoded_data,
+        asn1Spec=test
+    )
+    assert expected == decoded_data
+
+
+def test_goose_pdu_confRev():
+    encoded_data = (
+        "\x88\x01"
+        "\x02"
+    )
+    expected = 2
+    iec61850_goose_pdu = IECGoosePDU().clone()
+    conf_rev = iec61850_goose_pdu.getComponentByName('confRev')
+    decoded_data, unprocessed_trail = decoder.decode(
+        encoded_data,
+        asn1Spec=conf_rev
+    )
+    assert expected == decoded_data
+
+
+def test_goose_pdu_nds_com():
+    from pyasn1 import debug
+    debug.setLogger(debug.Debug('all'))
+    encoded_data = (
+        "\x89\x01"
+        "\x00"
+    )
+    expected = False
+    iec61850_goose_pdu = IECGoosePDU().clone()
+    nds_com = iec61850_goose_pdu.getComponentByName('ndsCom')
+    decoded_data, unprocessed_trail = decoder.decode(
+        encoded_data,
+        asn1Spec=nds_com
+    )
+    assert expected == decoded_data
+
+
+def test_goose_pdu_num_dat_set_entries():
+    encoded_data = (
+        "\x8a\x01"
+        "\x05"
+    )
+    expected = 5
+    iec61850_goose_pdu = IECGoosePDU().clone()
+    num_dat_set_entries = iec61850_goose_pdu.getComponentByName('numDatSetEntries')
+    decoded_data, unprocessed_trail = decoder.decode(
+        encoded_data,
+        asn1Spec=num_dat_set_entries
+    )
+    assert expected == decoded_data
+
+
+def test_goose_pdu_all_data_boolean():
+    from pyasn1 import debug
+    debug.setLogger(debug.Debug('all'))
+    encoded_data = (
+        "\x83\x01"
+        "\x00"
+    )
+    expected = False
+    iec61850_goose_pdu = IECGoosePDU().clone()
+    all_data = iec61850_goose_pdu.getComponentByName('allData')
+    data_item_1 = all_data.getComponentByPosition(0)
+    boolean = data_item_1.getComponentByName('boolean')
+    decoded_data, unprocessed_trail = decoder.decode(
+        encoded_data,
+        asn1Spec=boolean
+    )
+    assert expected == decoded_data
+
+
+def test_goose_pdu_all_data_bit_string():
+    encoded_data = (
+        "\x84\x03"
+        "\x03\x00\x00"
+    )
+    expected = 0
+    iec61850_goose_pdu = IECGoosePDU().clone()
+    all_data = iec61850_goose_pdu.getComponentByName('allData')
+    data_item_1 = all_data.getComponentByPosition(0)
+    bit_string = data_item_1.getComponentByName('bit-string')
+    decoded_data, unprocessed_trail = decoder.decode(
+        encoded_data,
+        asn1Spec=bit_string
+    )
+    assert expected == decoded_data.asInteger()
+
+
+def test_goose_pdu_all_data_utc_time():
+    encoded_data = (
+        "\x91\x08"
+        "\x5a\xaa\xe0\xa4\x6f\xf3\x5e\x92"
+    )
+    expected = "\x5a\xaa\xe0\xa4\x6f\xf3\x5e\x92"
+    iec61850_goose_pdu = IECGoosePDU().clone()
+    all_data = iec61850_goose_pdu.getComponentByName('allData')
+    data_item_1 = all_data.getComponentByPosition(0)
+    utc_time = data_item_1.getComponentByName('utc-time')
+    decoded_data, unprocessed_trail = decoder.decode(
+        encoded_data,
+        asn1Spec=utc_time
+    )
+    assert expected == decoded_data
+
+
+def test_goose_pdu_all_data_structure_1():
+    from pyasn1 import debug
+    debug.setLogger(debug.Debug('all'))
+    encoded_data = (
+        "\xa2\x12"
+        "\x83\x01\x00\x84\x03\x03\x00\x00\x91\x08\x5a\xaa\xe0\xa4\x6f\xf3"
+        "\x5e\x92"
+    )
+    expected = False
+    iec61850_goose_pdu = IECGoosePDU().clone()
+    all_data = iec61850_goose_pdu.getComponentByName('allData')
+    data_item_1 = all_data.getComponentByPosition(0)
+    structure = data_item_1.getComponentByName('structure')
+    import pdb; pdb.set_trace()
+    decoded_data, unprocessed_trail = decoder.decode(
+        encoded_data,
+        asn1Spec=Data().clone()
+    )
+    assert expected == decoded_data
+
+
+def test_goose_pdu_all_data():
+    from pyasn1 import debug
+    debug.setLogger(debug.Debug('all'))
+    encoded_data = (
+        "\xab\x64"
+        "\xa2\x12\x83\x01\x00\x84\x03\x03\x00\x00\x91\x08\x5a\xaa\xe0\xa4"
+        "\x6f\xf3\x5e\x92\xa2\x12\x83\x01\x00\x84\x03\x03\x00\x00\x91\x08"
+        "\x5a\xa9\x39\x5a\x03\xea\x4a\x92\xa2\x12\x83\x01\x00\x84\x03\x03"
+        "\x00\x00\x91\x08\x5a\xa9\x39\x5a\x03\xea\x4a\x92\xa2\x12\x83\x01"
+        "\x00\x84\x03\x03\x00\x00\x91\x08\x5a\xa9\x39\x5a\x03\xea\x4a\x92"
+        "\xa2\x12\x83\x01\x00\x84\x03\x03\x00\x00\x91\x08\x5a\xaa\xd1\x7d"
+        "\xd2\x48\x21\x92"
+    )
+    expected = 5
+    iec61850_goose_pdu = IECGoosePDU().clone()
+    all_data = iec61850_goose_pdu.getComponentByName('allData')
+    decoded_data, unprocessed_trail = decoder.decode(
+        encoded_data,
+        asn1Spec=all_data
+    )
+    assert expected == decoded_data
+
+
+def test_goose_pdu_decode():
+    from pyasn1 import debug
+    debug.setLogger(debug.Debug('all'))
+    encoded_data = (
+        "\x61\x81\xf3\x80\x2b\x44\x45\x4e"
+        "\x4e\x59\x5f\x31\x31\x46\x5f\x31\x33\x5f\x31\x30\x30\x43\x46\x47"
+        "\x2f\x4c\x4c\x4e\x30\x24\x47\x4f\x24\x44\x73\x65\x74\x5f\x53\x75"
+        "\x62\x6e\x65\x74\x43\x74\x72\x6c\x81\x02\x07\xd0\x82\x22\x44\x45"
+        "\x4e\x4e\x59\x5f\x31\x31\x46\x5f\x31\x33\x5f\x31\x30\x30\x43\x46"
+        "\x47\x2f\x4c\x4c\x4e\x30\x24\x47\x5f\x4e\x65\x74\x43\x74\x72\x6c"
+        "\x83\x19\x31\x31\x46\x5f\x31\x33\x5f\x31\x30\x30\x44\x73\x65\x74"
+        "\x5f\x53\x75\x62\x6e\x65\x74\x43\x74\x72\x6c\x84\x08\x5a\xaa\xe0"
+        "\xa4\x6f\xf3\x5e\x92\x85\x01\x60\x86\x02\x3f\x40\x87\x01\x00\x88"
+        "\x01\x02\x89\x01\x00\x8a\x01\x05\xab\x64\xa2\x12\x83\x01\x00\x84"
+        "\x03\x03\x00\x00\x91\x08\x5a\xaa\xe0\xa4\x6f\xf3\x5e\x92\xa2\x12"
+        "\x83\x01\x00\x84\x03\x03\x00\x00\x91\x08\x5a\xa9\x39\x5a\x03\xea"
+        "\x4a\x92\xa2\x12\x83\x01\x00\x84\x03\x03\x00\x00\x91\x08\x5a\xa9"
+        "\x39\x5a\x03\xea\x4a\x92\xa2\x12\x83\x01\x00\x84\x03\x03\x00\x00"
+        "\x91\x08\x5a\xa9\x39\x5a\x03\xea\x4a\x92\xa2\x12\x83\x01\x00\x84"
+        "\x03\x03\x00\x00\x91\x08\x5a\xaa\xd1\x7d\xd2\x48\x21\x92"
+    )
+    g = IECGoosePDU().subtype(
+        implicitTag=tag.Tag(
+            tag.tagClassApplication,
+            tag.tagFormatConstructed,
+            1
+        )
+    )
+    decoded_data, unprocessed_trail = decoder.decode(
+        encoded_data,
+        asn1spec=g
+    )
